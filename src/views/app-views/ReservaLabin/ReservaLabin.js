@@ -12,7 +12,7 @@ import moment from 'moment';
 
 const EditForm = () => {
   const navigate = useNavigate();
-  const { id } = useParams();  // Aqui pegamos o valor do parâmetro `id` da URL
+  const { id } = useParams();  // Aqui pegamos o valor do parâmetro `id` da URL//
   const [horariosDisponiveis, setHorariosDisponiveis] = useState([]);
   const [showCard, setShowCard] = useState(false); 
   const [showSoftwareInfo, setShowSoftwareInfo] = useState(false); // Novo estado
