@@ -11,7 +11,7 @@ import formAlert from '../../../assets/images/form-alert.png';
 import axios from 'axios';
 import moment from 'moment';
 
-/////////
+
 
 function ReservaLabhab() {
   const navigate = useNavigate();
@@ -66,17 +66,12 @@ function ReservaLabhab() {
 
       let response;
       if (isEdit) {
-        
-
-
+        // Se for edição, use PUT
         response = await axios.put(http://localhost:8080/reservas-labhab/editar/${id}, formattedValues);
         message.success('Reserva editada com sucesso!');
         navigate('/minhas_reservas');
       } else {
-        
-
-
-
+        // Se for criação, use POST
         response = await axios.post('http://localhost:8080/reservas-labhab/criar', formattedValues);
         message.success('Reserva realizada com sucesso!');
       }
@@ -258,4 +253,4 @@ function ReservaLabhab() {
   );
 }
 
-export default ReservaLabhab; 
+export default ReservaLabhab;
