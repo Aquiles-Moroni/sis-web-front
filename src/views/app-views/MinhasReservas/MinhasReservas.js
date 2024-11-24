@@ -394,12 +394,22 @@ const filteredDataSource = dataSource.filter(item =>
         <Dropdown 
       overlay={
         <Menu>
-         <Menu.Item key="edit">
-        {/* Link de edição passando o id para a página de edição */}
-        <Link to={`/reserva_labin/${record.id}`}>
-          <Button type="link">Editar</Button>
-        </Link>
-      </Menu.Item>
+      <Menu.Item key="edit">
+      <Link
+  to={`/reserva_${
+    record.nome_tabela === 'reserva_labinfo'
+      ? 'labin'
+      : record.nome_tabela === 'reserva_labhab'
+      ? 'labhab'
+      : record.nome_tabela === 'reserva_sala'
+      ? 'sala'
+      : '' // Adicione um fallback caso não corresponda a nenhuma tabela
+  }/${record.id}`}
+>
+  <Button type="link">Editar</Button>
+</Link>
+
+</Menu.Item>
 
           <Menu.Item key="delete">
             <Button 

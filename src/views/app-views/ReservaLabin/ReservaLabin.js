@@ -10,7 +10,7 @@ import SlideMenu from '../../../layouts/Slidemenu/Slidemenu';
 import axios from 'axios';
 import moment from 'moment';
 
-const EditForm = () => {
+const ReservaLabin = () => {
   const navigate = useNavigate();
   const { id } = useParams();  // Aqui pegamos o valor do parâmetro `id` da URL//
   const [horariosDisponiveis, setHorariosDisponiveis] = useState([]);
@@ -279,4 +279,4 @@ const EditForm = () => {
   );
 };
 
-export default EditForm;
+export default ReservaLabin;
