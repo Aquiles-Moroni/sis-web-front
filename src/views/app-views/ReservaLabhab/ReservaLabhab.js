@@ -1,6 +1,7 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, Select, Input, Button, message, Row, Col, Upload,Card} from 'antd';
+import { useParams,useNavigate } from 'react-router-dom';
 import Header from '../../../layouts/Header/Header';
 import { Link } from 'react-router-dom';
 import { UploadOutlined } from '@ant-design/icons';
@@ -8,22 +9,86 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 import SlideMenu from '../../../layouts/Slidemenu/Slidemenu';
 import formAlert from '../../../assets/images/form-alert.png';
 import axios from 'axios';
+import moment from 'moment';
 
 
 
 function ReservaLabhab() {
-  const [form] = Form.useForm();
-  const [horariosDisponiveis, setHorariosDisponiveis] = React.useState([]);
+  const navigate = useNavigate();
+  const { id } = useParams();  // Aqui pegamos o valor do parâmetro id da URL
+  const [horariosDisponiveis, setHorariosDisponiveis] = useState([]);
   const [showCard, setShowCard] = useState(false); 
+  const [form] = Form.useForm();  // Inicializando o hook useForm
+  const [isEdit, setIsEdit] = useState(false); // Novo estado para identificar se é edição ou criação
   
-  const handleInfoClick = () => {
-    setShowCard(!showCard); 
-  };
+  
 
+  
+
+  useEffect(() => {
+    if (id) {
+      setIsEdit(true); // Se o id estiver presente, estamos editando
+      axios.put(http://localhost:8080/reservas-labhab/editar/${id})
+        .then(response => {
+       
+          form.setFieldsValue({
+            disciplina: response.data.disciplina,
+            data: moment(response.data.data).format('YYYY-MM-DD'),
+            turno: response.data.turno,
+            laboratorio: response.data.laboratorio,
+            hora_inicio: response.data.hora_inicio,
+            hora_fim: response.data.hora_fim,
+            observacao: response.data.observacao,
+            reserva_dia: response.data.reserva_dia,
+          });
+  
+          // Configura horários disponíveis dependendo do turno
+          handleTurno(response.data.turno);
+        })
+        .catch(error => console.error('Erro ao carregar os dados:', error));
+    }
+  }, [id]);  // O efeito só será executado novamente quando o id mudar
+  
+
+  const onFinish = async (values) => {
+    try {
+      const formattedValues = {
+        disciplina: values.disciplina,
+        data: values.data,
+        turno: values.turno,
+        laboratorio: values.laboratorio,
+        hora_inicio: values.hora_inicio, 
+        hora_fim: values.hora_fim,       
+        observacao: values.observacao,
+        reserva_dia: values.reserva_dia,
+        id_usuario: localStorage.getItem('userId'),
+      };
+
+      let response;
+      if (isEdit) {
+        // Se for edição, use PUT
+        response = await axios.put(http://localhost:8080/reservas-labhab/editar/${id}, formattedValues);
+        message.success('Reserva editada com sucesso!');
+        navigate('/minhas_reservas');
+      } else {
+        // Se for criação, use POST
+        response = await axios.post('http://localhost:8080/reservas-labhab/criar', formattedValues);
+        message.success('Reserva realizada com sucesso!');
+      }
+      
+      console.log('Resposta da API:', response.data);
+      form.resetFields();
+    } catch (error) {
+      console.error('Erro ao realizar a reserva:', error.response ? error.response.data : error);
+      message.error('Erro ao realizar a reserva. Tente novamente.');
+    }
+  };
 
   const onFinishFailed = (errorInfo) => {
     console.log('Falha no envio:', errorInfo);
   };
+ 
+
 
   const handleTurno = (turno) => {
     let horarios = {
@@ -45,34 +110,12 @@ function ReservaLabhab() {
     }
   };
 
-  const onFinish = async (values) => {
-    try {
-      const formattedValues = {
-        disciplina: values.disciplina,
-        data: values.data,
-        turno: values.turno,
-        laboratorio: values.laboratorio,
-        anexar_pop: values.anexar_pop,
-        equipamentos: values.equipamentos ? values.equipamentos.join(', ') : null,
-        hora_inicio: values.hora_inicio, 
-        hora_fim: values.hora_fim,       
-        observacao: values.observacao,
-        reserva_dia: values.reserva_dia,
-        id_usuario: localStorage.getItem('userId'),
-       
-      };
-      const response = await axios.post('http://localhost:8080/reservas-labhab/criar', formattedValues);
-      console.log('Resposta da API:', response.data);
-      message.success('Reserva realizada com sucesso!');
-      form.resetFields();
-    } catch (error) {
-      console.error('Erro ao criar reserva:', error.response ? error.response.data : error);
-      message.error('Erro ao realizar a reserva. Tente novamente.');
-    }
-   
+  const handleInfoClick = () => {
+    setShowCard(!showCard); // Alterna a exibição do card de reservas
   };
- 
 
+ 
+  
   return (
     <div>
       <Header />
@@ -210,4 +253,4 @@ function ReservaLabhab() {
   );
 }
 
-export default ReservaLabhab;
+export default ReservaLabhab; 
