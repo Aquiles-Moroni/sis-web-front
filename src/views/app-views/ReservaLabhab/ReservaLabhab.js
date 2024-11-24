@@ -9,9 +9,7 @@ import { InfoCircleOutlined } from '@ant-design/icons';
 import SlideMenu from '../../../layouts/Slidemenu/Slidemenu';
 import formAlert from '../../../assets/images/form-alert.png';
 import axios from 'axios';
-import moment from 'moment';
-
-/// 
+import moment from 'moment'; 
 
 function ReservaLabhab() {
   const navigate = useNavigate();
